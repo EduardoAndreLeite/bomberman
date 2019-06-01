@@ -5,7 +5,6 @@
 
 
 #include <stdio.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 #include "mapconf.h"
@@ -16,26 +15,18 @@
 #define BRK_LINE '\n'
 
 /*
-* Local structures
-*/
-
-
-
-/*
 * Functions
 */
 
-// bool makeMap(void)
-// {
-//   bool borderExists = makeBorders();
+short int makemap(void)
+{
+  if (!(borderExists = makeborders()))
+  printf("An error has occurred!\n The program couldn't make a border. CALL 911!!!");
 
-//   if (!borderExists)
-//     printf("An error has occurred!\n The program couldn't make a border. CALL 911!!!");
+  return 0;
+}
 
-//   return true;
-// }
-
-// bool makeBorders(void)
+// short int makeBorders(void)
 // {
 //   int i, j;
 //   const int LINEAMOUNT   = getLineAmount();

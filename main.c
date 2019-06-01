@@ -2,17 +2,21 @@
 
 #include "functions.h"
 #include "game.h"
+#include "makemap.h"
+#include "mapconf.h"
 
 int main(void)
 {
-  int game;
+  unsigned short int a;
 
-  startGame();
-  do
-  {
-    kbhit();
+  a = getcolqty();
 
-  } while (game);
+  //startGame();
+  // do
+  // {
+  //   kbhit();
+
+  // } while (game);
 
   return 0;
 }

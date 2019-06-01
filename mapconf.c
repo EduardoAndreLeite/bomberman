@@ -9,57 +9,67 @@
 #include <stdlib.h>
 #include "mapconf.h"
 
-int getLineAmount()
-{
-  char *amountAsString = getConf("lineAmount");
-  int amount = (int)strtol(amountAsString, NULL, 10);
+static char *conf(char *query);
 
-  return amount;
+short getlineqty(void)
+{
+  char *qty_asstring = conf("line_quantity");
+  int quantity = (int)strtol(qty_asstring, NULL, 10);
+
+  return quantity;
 }
 
-int getColumnAmount()
+short getcolqty(void)
 {
-  char *amountAsString = getConf("columnAmount");
-  int amount = (int)strtol(amountAsString, NULL, 10);
+  char *qty_asstring = conf("column_quantity");
+  int quantity = (int)strtol(qty_asstring, NULL, 10);
 
-  return amount;
+  return quantity;
 }
 
-char *getConf(char *query)
-{
+static char *conf(char *query) {
   FILE *fp;
   char buff[255];
-  char *val;  // tem de ser ponteiro devido ao retorno da funcao strtok
-  char bk[] = "=";
-  int found = 0;
+  char *ret;  // tem de ser ponteiro devido ao retorno da funcao strtok
+  char *brkpt; // it has to be a char pointer due to strtok parameter type
+  int endloop;
 
-  while (!found)
+  brkpt = "=";
+
+  if (!(fp = fopen("mapconf.conf", "r+")))
+    ret = NULL;
+  else
   {
-
-    fp = fopen("mapconf.conf", "r+");
-
-    /*
-    *   Coloca a primeira linha do documento aberto em fp no array buff
-    */
-    fgets(buff, 255, (FILE *)fp);
-
-    /*
-    * This function returns a pointer to the first token found in the string.
-    * A null pointer is returned if there are no tokens left to retrieve.
-    */
-    val = strtok(buff, bk);
-    if (val != NULL)
+    endloop = 0;
+    while (!endloop)
     {
-
-      if (strcmp(val, query) == 0)
+      if (fgets(buff, 255, (FILE *)fp) == NULL)
       {
-        val = strtok(NULL, bk);
-        found = 1;
+
+        printf("Query not found!");
+        endloop = 1;
+      }
+      else
+      {
+        /*
+        * This function returns a pointer to the first token found in the string.
+        * A null pointer is returned if there are no tokens left to retrieve.
+        */
+        if ((ret = strtok(buff, brkpt)) != NULL)
+        {
+
+          if (strcmp(ret, query) == 0)
+          {
+            ret = strtok(NULL, brkpt);
+            endloop = 1;
+          }
+        }
       }
     }
+
+    fclose(fp);
   }
 
-  fclose(fp);
 
-  return val;
+  return ret;
 }
