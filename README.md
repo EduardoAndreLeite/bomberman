@@ -34,7 +34,7 @@
 ### Variables
   Variables' must be **camelCase**.
   If a name seems too unexpressive it must have a comment explaning it's use.
-  Only strings shall be initialized. If a primitive type variable needs a initial value assign it just before using the variable.
+  Only arrays may be initialized. If a primitive type variable needs a initial value assign it just before using the variable.
   #### Valid examples
   ```
     short userId;
