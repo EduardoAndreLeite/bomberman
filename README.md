@@ -4,6 +4,7 @@
 * Git commits messages verbs' msut be on *infinitive*;
 * *Avoid* use of global variables, use constants if needed;
 * Headers must check if it's declarations have been defined before;
+* Use *bool* type (from stdbool.h) for boolean variables;
 
 ## Naming patterns
 
