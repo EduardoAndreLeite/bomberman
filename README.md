@@ -5,6 +5,8 @@
 * *Avoid* use of global variables, use constants if needed;
 * Headers must check if it's declarations have been defined before;
 * Use *bool* type (from stdbool.h) for boolean variables;
+* Use *static* for local functions;
+* Sort variable declarations by, from top to bottom: constants - booleans - numeric - strings and characters - custom types;
 
 ## Naming patterns
 
