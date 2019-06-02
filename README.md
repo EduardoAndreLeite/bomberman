@@ -1,4 +1,4 @@
-# Bomberman like game
+# Game like Bomberman
 
 ## Some conventions
 * Git commits messages verbs' msut be on *infinitive*;
