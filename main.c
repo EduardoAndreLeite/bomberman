@@ -7,9 +7,9 @@
 
 int main(void)
 {
-  unsigned short int a;
+  bool a;
 
-  a = getcolqty();
+  makemap("map.txt");
 
   //startGame();
   // do

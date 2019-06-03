@@ -35,8 +35,7 @@ static char *conf(char *query) {
   int endloop;
 
   brkpt = "=";
-
-  if (!(fp = fopen("mapconf.conf", "r+")))
+  if (!(fp = fopen("map/mapconf.conf", "r+")))
     ret = NULL;
   else
   {

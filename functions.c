@@ -1,4 +1,8 @@
+#ifndef NCURSES_H
+#define NCURSES_H
 #include <ncurses.h>
+#endif
+
 #include "functions.h"
 
 int kbhit(void) {
@@ -33,10 +37,7 @@ int kbhit(void) {
     msg: message to place
 
 */
-int middle(char axis,
-          WINDOW *w,
-          unsigned int size)
-{
+int middle(char axis, WINDOW *w, unsigned int size) {
 
   int maxCol,
       maxLine,
@@ -79,4 +80,32 @@ void bmsg(char *msg) {
   wrefresh(sbw);
   wprintw(sbw, msg);
   wrefresh(sbw);
+}
+
+char *err(bool *success) {
+
+  char *msg;
+  char e[] = "The address given was not set before or isn't of a boolean variable.";
+  char s[] = "\0";
+
+  if (*success != false || *success != true)
+    *success = false;
+  else
+    msg = e;
+
+  return msg;
+}
+
+char *succ(bool *success) {
+
+  char *msg;
+  char e[] = "The address given was not set before or isn't of a boolean variable.";
+  char s[] = "\0";
+
+  if (*success != false || *success != true)
+    *success = true;
+  else
+    msg = e;
+
+  return msg;
 }
