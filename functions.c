@@ -82,30 +82,8 @@ void bmsg(char *msg) {
   wrefresh(sbw);
 }
 
-char *err(bool *success) {
+void error(char *msg) {
 
-  char *msg;
-  char e[] = "The address given was not set before or isn't of a boolean variable.";
-  char s[] = "\0";
-
-  if (*success != false || *success != true)
-    *success = false;
-  else
-    msg = e;
-
-  return msg;
-}
-
-char *succ(bool *success) {
-
-  char *msg;
-  char e[] = "The address given was not set before or isn't of a boolean variable.";
-  char s[] = "\0";
-
-  if (*success != false || *success != true)
-    *success = true;
-  else
-    msg = e;
-
-  return msg;
+    perror(msg);
+    exit(EXIT_FAILURE);
 }

@@ -1,5 +1,5 @@
 #ifndef MAPCOMPONENTS_H
-#define MAPCOMPONENTS_H
+#define MAPCOMPONENTS_H 0
 
 #define CMP_PLAYER_START_POS 'P'
 #define CMP_EMPTY_SPACE      ' '

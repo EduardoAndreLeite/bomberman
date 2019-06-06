@@ -1,5 +1,5 @@
 #ifndef MAKEMAP_H
-#define MAKEMAP_H
+#define MAKEMAP_H 0
 
-bool makemap(char *mapName);
+void makemap(char *mapName);
 #endif

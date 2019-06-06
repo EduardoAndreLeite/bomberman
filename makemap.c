@@ -27,24 +27,22 @@ typedef struct MapComponent
   float prob; /* a given probability to the character (defines the range it has in a random pick) */
 } MapComponent;
 
-static bool skipline(FILE *fp, int colQty);
-static bool breakline(FILE *fp);
-static bool line(FILE *fp, char c, int colQty);
-static bool randline(FILE *fp, MapComponent cmps[], size_t cmpQty, int colQty);
-static bool makeborders(FILE *fp, int lineQty, int colQty);
+static void skipline(FILE *fp, int colQty);
+static void breakline(FILE *fp);
+static void line(FILE *fp, char c, int colQty);
+static void randline(FILE *fp, MapComponent cmps[], size_t cmpQty, int colQty);
+static void makeborders(FILE *fp, int lineQty, int colQty);
 
 /*
 * Functions
 */
 
-bool makemap(char *mapName) {
-
+void makemap(char *mapName) {
+  getlineqty();
   const int LINE_QTY = getlineqty();
   const int COL_QTY = getcolqty();
-  bool s;
   int i;
   size_t cmpsSize;
-  char path[50] = "map/";
   FILE *mapFile;
   MapComponent cmps[] = {{CMP_UNBRKL_WALL, .1}, {CMP_EMPTY_SPACE, .38}, {CMP_BRKL_WALL, .52}};
 
@@ -53,52 +51,28 @@ bool makemap(char *mapName) {
   cmpsSize = sizeof(cmps) / sizeof(MapComponent);
 
   strcat(path, mapName);
-
-  succ(&s);
   if (!(mapFile = fopen(path, "w+")))
-    err(&s);
+    error("File not found!");
   else
   {
+    fseek(mapFile, 0, SEEK_SET); // reseta o cursor para o inicio do arquivo
+    skipline(mapFile, COL_QTY); // pula COL_QTY colunas e quebra a linha
 
-    if (!makeborders(mapFile, LINE_QTY, COL_QTY))
-      err(&s);
-    else
+    for (i = 0; i < LINE_QTY - 2; i++)
     {
-      if (fseek(mapFile, 0, SEEK_SET) != 0) // reseta o cursor para o inicio do arquivo
-        err(&s);
-      else
-      {
 
-        if (!skipline(mapFile, COL_QTY)) // pula COL_QTY colunas e quebra a linha
-          err(&s);
-        else
-        {
-
-          for (i = 0; i < LINE_QTY - 2; i++)
-          {
-
-            fseek(mapFile, 1, SEEK_CUR);
-            randline(mapFile, cmps, cmpsSize, COL_QTY - 1);
-            fseek(mapFile, 1, SEEK_CUR);
-            breakline(mapFile);
-          }
-        }
-      }
+      fseek(mapFile, 1, SEEK_CUR);
+      randline(mapFile, cmps, cmpsSize, COL_QTY - 1);
+      fseek(mapFile, 1, SEEK_CUR);
+      breakline(mapFile);
     }
-
     fclose(mapFile);
   }
-
-
-  return s;
 }
 
-static bool makeborders(FILE *fp, int lineQty, int colQty) {
+static void makeborders(FILE *fp, int lineQty, int colQty) {
 
-  bool s;
   int i, j;
-
-  succ(&s);
 
   line(fp, CMP_UNBRKL_WALL, colQty);
   for (i = 0; i < lineQty - 2; i++)
@@ -110,38 +84,27 @@ static bool makeborders(FILE *fp, int lineQty, int colQty) {
   }
   breakline(fp);
   line(fp, CMP_UNBRKL_WALL, colQty);
-
-  return s;
 }
 
-static bool line(FILE *fp, char c, int colQty) {
+static void line(FILE *fp, char c, int colQty) {
 
-  bool ret;
   int i;
 
-  ret = 1;
   for (i = 1; i <= colQty; i++)
   {
     if (!fputc(c, fp))
-    {
-      ret = 0;
-      break;
-    }
+      erro("Couldn't print line.");
   }
-
-  return ret;
 }
 
-static bool randline(FILE *fp, MapComponent cmps[], size_t cmpQty, int colQty)
+static void randline(FILE *fp, MapComponent cmps[], size_t cmpQty, int colQty)
 {
 
-  bool s;
   int i, j;
   int unbkWalls; /* keeps record of how many CMP_UNBRKL_WALLS were set */
   short random, left;
   char selected;
 
-  succ(&s);
   for (i = 1; i < colQty; i++)
   {
     left = 0;
@@ -161,13 +124,11 @@ static bool randline(FILE *fp, MapComponent cmps[], size_t cmpQty, int colQty)
         }
 
         if (fputc(selected, fp) != selected)
-          err(&s);
+          error("Couldn't print random line.");
         break;
       }
     }
   }
-
-  return s;
 }
 
 // void fillBoxes(int amount)
@@ -180,27 +141,18 @@ static bool randline(FILE *fp, MapComponent cmps[], size_t cmpQty, int colQty)
 // /* TODO make placeEnemies
 // coloca inimigos em lugares com bastante espaço em branco, permitindo a eles se movimentar
 // */
-static bool breakline(FILE *fp)
+static void breakline(FILE *fp)
 {
 
-  bool s;
-
-  succ(&s);
   if (!fputc(BRK_LINE, fp))
-    err(&s);
-
-  return s;
+    erro("Couldn't breakline.");
 }
 
 
-static bool skipline(FILE *fp, int colQty) {
-  bool s;
+static void skipline(FILE *fp, int colQty) {
 
-  succ(&s);
   if (fseek(fp, colQty, SEEK_CUR) != 0)
-    err(&s);
+    erro("Error when skipping line.");
   else
     breakline(fp);
-
-  return s;
 }

@@ -9,7 +9,7 @@ int main(void)
 {
   bool a;
 
-  makemap("map.txt");
+  makemap("map1.txt");
 
   //startGame();
   // do

@@ -3,26 +3,29 @@
 * This file contains functions that simplify the reading
 * of the mapconfig file.
 */
+#define ABSOLUTE_PATH 129
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 #include "mapconf.h"
 
 static char *conf(char *query);
 
 short getlineqty(void)
 {
-  char *qty_asstring = conf("line_quantity");
-  int quantity = (int)strtol(qty_asstring, NULL, 10);
+  char *qtyAsString = conf("line_quantity");
+  int quantity = (int)strtol(qtyAsString, NULL, 10);
 
   return quantity;
 }
 
 short getcolqty(void)
 {
-  char *qty_asstring = conf("column_quantity");
-  int quantity = (int)strtol(qty_asstring, NULL, 10);
+  char *qtyAsString = conf("column_quantity");
+  int quantity = (int)strtol(qtyAsString, NULL, 10);
 
   return quantity;
 }
@@ -32,21 +35,27 @@ static char *conf(char *query) {
   char buff[255];
   char *ret;  // tem de ser ponteiro devido ao retorno da funcao strtok
   char *brkpt; // it has to be a char pointer due to strtok parameter type
-  int endloop;
+  char dirPath[ABSOLUTE_PATH];
+  int endLoop;
+
+  getcwd(dirPath, ABSOLUTE_PATH);
+
+  strcat(dirPath, "map.conf");
+
 
   brkpt = "=";
-  if (!(fp = fopen("map/mapconf.conf", "r+")))
+  if (!(fp = fopen(dirPath, "r+")))
     ret = NULL;
   else
   {
-    endloop = 0;
-    while (!endloop)
+    endLoop = 0;
+    while (!endLoop)
     {
       if (fgets(buff, 255, (FILE *)fp) == NULL)
       {
 
         printf("Query not found!");
-        endloop = 1;
+        endLoop = 1;
       }
       else
       {
@@ -60,7 +69,7 @@ static char *conf(char *query) {
           if (strcmp(ret, query) == 0)
           {
             ret = strtok(NULL, brkpt);
-            endloop = 1;
+            endLoop = 1;
           }
         }
       }
