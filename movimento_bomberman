@@ -1,0 +1,160 @@
+#include <stdio.h>
+#include <string.h>
+#include <conio.h>
+#include <conio2.h>
+#define NLIN 11
+#define NCOL 27
+#define TAMN 25
+
+
+typedef struct tipo_posicao
+{
+    int lin, col;
+} POSICAO;
+
+int le_mapa (char n[], char m[NLIN][NCOL], POSICAO *p)
+{
+    FILE *arq;
+    int val, i, j;
+    char aux;
+
+    if(! (arq = fopen (n, "r")))
+        val = 0;
+    else
+    {
+        val = 1;
+        for(i = 0; i <NLIN; i++)
+        {
+           for(j = 0; j <  NCOL; j++)
+            {
+                aux = getc(arq);
+                m[i][j] = aux;
+                if(aux == 'P')
+                {
+                    p->lin = i;
+                    p->col = j;
+                }
+            }
+            getc(arq);
+        }
+    }
+
+   return val;
+}
+
+int atualiza_mapa (char m[NLIN][NCOL], POSICAO *bm, char mov)
+{
+    int val, aux;
+
+    switch(mov)
+    {
+        case 'w':
+            {
+              if(m[bm->lin - 1][bm->col] == ' ')
+              {
+                  aux = m[bm->lin][bm->col];
+                  m[bm->lin][bm->col] = ' ';
+                  bm->lin--;
+                  m[bm->lin][bm->col] = aux;
+                  val = 1;
+              }
+              else
+                val = 0;
+            }
+            break;
+        case 'a':
+            {
+               if(m[bm->lin][bm->col -1] == ' ')
+                {
+                  aux = m[bm->lin][bm->col];
+                  m[bm->lin][bm->col] = ' ';
+                  bm->col --;
+                  m[bm->lin][bm->col] = aux;
+                  val = 1;
+                }
+                else
+                    val = 0;
+            }
+            break;
+        case 's':
+            {
+                if(m[bm->lin +1][bm->col] == ' ')
+                {
+                  aux = m[bm->lin][bm->col];
+                  m[bm->lin][bm->col] = ' ';
+                  bm->lin ++;
+                  m[bm->lin][bm->col] = aux;
+                  val = 1;
+                }
+                else
+                    val = 0;
+            }
+            break;
+        case 'd':
+            {
+                if(m[bm->lin][bm->col +1] == ' ')
+                {
+                  aux = m[bm->lin][bm->col];
+                  m[bm->lin][bm->col] = ' ';
+                  bm->col ++;
+                  m[bm->lin][bm->col] = aux;
+                  val = 1;
+                }
+                else
+                    val = 0;
+            }
+            break;
+        default:
+            val = 0;
+    }
+
+    return val;
+}
+
+void imprime_mapa(char m[NLIN][NCOL])
+{
+    int a, b;
+    for(a = 0; a <  NLIN; a++)
+    {
+        for(b = 0; b <  NCOL; b++)
+        {
+            printf("%c", m[a][b]);
+        }
+        printf("\n");
+    }
+}
+
+int main()
+{
+    int le, att, imp,  cont = 0;
+    int matriz[NLIN][NCOL];
+    char nome[TAMN];
+    char dir;
+    char mapa[NLIN][NCOL];
+    POSICAO pos;
+
+    textbackground(RED);
+
+    printf("digite o nome do arquivo \n");
+    scanf(" %s", &nome);
+
+    le = le_mapa(nome , mapa, &pos);
+    if(le ==  1)
+    {
+        while(cont < 50)
+        {
+            imprime_mapa(mapa);
+            dir = getch();
+            att = atualiza_mapa(mapa, &pos, dir);
+            if(att == 1)
+                cont ++;
+            clrscr();
+        }
+    }
+    else
+        printf("erro ao carregar o arquivo \n");
+
+
+
+    return 0;
+}
